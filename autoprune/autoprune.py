@@ -2,7 +2,7 @@ from discord.ext import commands
 from __main__ import send_cmd_help
 from cogs.utils import checks
 
-
+# modified version of pepsi-cogs pruner
 class autoprune:
     """Prune inactive members"""
 
