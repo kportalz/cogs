@@ -3,13 +3,14 @@ from discord.ext import commands
 from .utils.dataIO import dataIO
 from .utils import checks
 
+
 class autoprune:
 
     def __init__(self, bot):
         self.bot = bot
 
     @commands.has_permissions(kick_members=True)
-    @commands.command(pass_context=True,name="estprune")
+    @commands.command()
     async def estprune(self, days=30):
         """Estimate count of members that would be pruned based on the amount of days. Staff only."""
         if days > 30:
@@ -26,7 +27,7 @@ class autoprune:
         self.bot.estimate_pruned_members(server=self.bot.server, days=days)
         await
         self.bot.edit_message(msg, "{:,} members inactive for {} day(s) would be kicked from {}!".format(count, days,
-                                                                                                         self.bot.server.name))
+                                                                                                 self.bot.server.name))
 
 
 def setup(bot):
