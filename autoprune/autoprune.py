@@ -1,31 +1,42 @@
-import discord
 from discord.ext import commands
-from .utils.dataIO import dataIO
-from .utils import checks
-import asyncio
+from __main__ import send_cmd_help
+from cogs.utils import checks
+
 
 class autoprune:
+    """Prune inactive members"""
 
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.has_permissions(kick_members=True)
-    @commands.command()
-    async def estprune(self, days=30):
-        """Estimate count of members that would be pruned based on the amount of days. Staff only."""
-        if days > 30:
-            await self.bot.say("Maximum 30 days")
-            return
-        if days < 1:
-            await self.bot.say("Minimum 1 day")
-            return
-        msg = await
-        self.bot.say("I'm figuring this out!".format(self.bot.server.name))
-        count = await
-        self.bot.estimate_pruned_members(server=self.bot.server, days=days)
-        await
-        self.bot.edit_message(msg, "{:,} members inactive for {} day(s) would be kicked from {}!".format(count, days, self.bot.server.name))
+    @checks.admin_or_permissions(KICK_MEMBERS=True)
+    @commands.group(name="pruner", pass_context=True)
+    async def _pruner(self, ctx):
+        """Prune members"""
+        if ctx.invoked_subcommand is None:
+            await send_cmd_help(ctx)
+
+    @_pruner.command(pass_context=True)
+    async def check(self, ctx, days_amount: int):
+        """Check members to prune based on days"""
+        try:
+            this_server = ctx.message.author.server
+            prune_amount = await self.bot.estimate_pruned_members(server=this_server, days=days_amount)
+            await self.bot.say("Amount of members that would be pruned: " + str(prune_amount))
+        except:
+            await self.bot.say("Insufficient permissions.")
+
+    @_pruner.command(pass_context=True)
+    async def prune(self, ctx, days_amount: int):
+        """Prune members"""
+        try:
+            this_server = ctx.message.author.server
+            prune_amount = await self.bot.estimate_pruned_members(server=this_server, days=days_amount)  # I'm lazy
+            await self.bot.prune_members(server=this_server, days=days_amount)
+            await self.bot.say(str(prune_amount) + " inactive members pruned.")
+        except:
+            await self.bot.say("Insufficient permissions.")
 
 
 def setup(bot):
-    bot.add_cog(autoprune(bot))
+bot.add_cog(autoprune(bot))
