@@ -9,7 +9,7 @@ class autoprune:
     def __init__(self, bot):
         self.bot = bot
 
-    @checks.admin_or_permissions(KICK_MEMBERS=True)
+    @checks.admin_or_permissions(ADMINISTRATOR=True)
     @commands.group(name="pruner", pass_context=True)
     async def _pruner(self, ctx):
         """Prune members"""
