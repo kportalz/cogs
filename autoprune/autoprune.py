@@ -9,7 +9,6 @@ class autoprune:
         self.bot = bot
 
     @commands.has_permissions(kick_members=True)
-    @commands.command(pass_context=True,name="estimateprune")
     async def estprune(self, days=30):
         """Estimate count of members that would be pruned based on the amount of days. Staff only."""
         if days > 30:
