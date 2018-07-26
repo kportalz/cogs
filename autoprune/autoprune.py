@@ -14,12 +14,10 @@ class autoprune:
     async def estprune(self, days=30):
         """Estimate count of members that would be pruned based on the amount of days. Staff only."""
         if days > 30:
-            await
-            self.bot.say("Maximum 30 days")
+            await self.bot.say("Maximum 30 days")
             return
         if days < 1:
-            await
-            self.bot.say("Minimum 1 day")
+            await self.bot.say("Minimum 1 day")
             return
         msg = await
         self.bot.say("I'm figuring this out!".format(self.bot.server.name))
