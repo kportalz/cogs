@@ -39,4 +39,4 @@ class autoprune:
 
 
 def setup(bot):
-bot.add_cog(autoprune(bot))
+    bot.add_cog(autoprune(bot))
