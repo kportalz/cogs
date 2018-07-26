@@ -26,8 +26,7 @@ class autoprune:
         count = await
         self.bot.estimate_pruned_members(server=self.bot.server, days=days)
         await
-        self.bot.edit_message(msg, "{:,} members inactive for {} day(s) would be kicked from {}!".format(count, days,
-                                                                                                 self.bot.server.name))
+        self.bot.edit_message(msg, "{:,} members inactive for {} day(s) would be kicked from {}!".format(count, days, self.bot.server.name))
 
 
 def setup(bot):
