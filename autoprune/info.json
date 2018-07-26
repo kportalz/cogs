@@ -1,0 +1,9 @@
+{
+    "AUTHOR" : "portalz/kportalz",
+    "SHORT" : "A prune command.",
+    "DESCRIPTION" : "This command prunes users.",
+    "DISABLED" : false,
+    "NAME" : "autoprune",
+    "INSTALL_MSG" : "thanks for using my red plugin, I guess.",
+    "TAGS" : ["moderation"]
+}
