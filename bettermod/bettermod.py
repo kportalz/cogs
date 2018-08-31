@@ -207,7 +207,7 @@ class BetterMod:
                 e = discord.Embed(description="The case {} was deleted".format(str(i)))
                 e.set_author(name=user.name, icon_url=user.avatar_url)
             else:
-                e = discord.Embed(description="Case {} informations".format(str(i)))
+                e = discord.Embed(description="Case {} information".format(str(i)))
                 e.set_author(name=user.name, icon_url=user.avatar_url)
 
                 e.add_field(
@@ -329,7 +329,7 @@ class BetterMod:
                 if history[user.id]["case{}".format(str(i))]["deleted"] == 1:
                     i = i - 1
 
-                e = discord.Embed(description="Case {} informations".format(str(i)))
+                e = discord.Embed(description="Case {} information".format(str(i)))
                 e.set_author(name=user.name, icon_url=user.avatar_url)
 
                 e.add_field(
@@ -487,7 +487,7 @@ thumbnail's URL pictures:
 
             if not object.mentionable:
                 await self.bot.say(
-                    "The role cannot be mentionned. Please modify its settings to enable `Allow anyone to @mention this role`"
+                    "The role cannot be mentioned. Please modify its settings to enable `Allow anyone to @mention this role`"
                 )
                 return
 
@@ -499,46 +499,8 @@ thumbnail's URL pictures:
                 await self.error(ctx)
 
             await self.bot.say(
-                "The role {} will now be mentionned when a report is send".format(object.name)
+                "The role {} will now be mentioned when a report is send".format(object.name)
             )
-
-    @bmodset.command(pass_context=True, no_pm=True)
-    async def proof(self, ctx):
-        """Enable or disable the proof-needed mode for reports
-
-            If this mode is enabled, users will have to attach a file/link in order to report
-        """
-        server = ctx.message.server
-
-        if ctx.message.server.id not in self.settings:
-            await self.init(ctx.message.server, ctx)
-
-        if self.settings[server.id]["proof"] is False:
-            self.settings[server.id]["proof"] = True
-
-            try:
-                dataIO.save_json("data/bettermod/settings.json", self.settings)
-            except:
-                await self.error(ctx)
-                return
-
-            await self.bot.say(
-                "The proof-needed mode is now enabled. Users will need to attach a link/file to their message in order to report. Type {}bmodset proof` again to disable it"
-            )
-
-        else:
-            self.settings[server.id]["proof"] = False
-
-            try:
-                dataIO.save_json("data/bettermod/settings.json", self.settings)
-            except:
-                await self.error(ctx)
-                return
-
-            await self.bot.say(
-                "The proof-needed mode is now disabled. Users will no longer need to attach a link/file to their message. Type {}bmodset proof` again to enable it"
-            )
-
     @bmodset.group(pass_context=True, no_pm=True)
     async def color(self, ctx):
         """Modify the embed color bar
