@@ -1,9 +1,0 @@
-{
-    "AUTHOR" : "portalz/kportalz",
-    "SHORT" : "A system for assigning strikes to users, and automatically banning them after reaching a threshold",
-    "DESCRIPTION" : "This is a bot module to record strikes for users and performing an action when they reach a threshold.",
-    "DISABLED" : false,
-    "NAME" : "strikeout",
-    "INSTALL_MSG" : "thanks for using my red plugin, I guess.",
-    "TAGS" : ["moderation"]
-}
