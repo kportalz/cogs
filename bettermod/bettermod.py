@@ -1410,143 +1410,6 @@ thumbnail's URL pictures:
         )
 
     @checks.mod_or_permissions(administrator=True)
-    @warn.command(pass_context=True, no_pm=True, aliases="3")
-    async def softban(self, ctx, user: discord.Member, *, reason: str):
-        """Ban and unban the user, deleting 7 days of messages."""
-        server = ctx.message.server
-        author = ctx.message.author
-
-        try:
-            await self.bot.delete_message(ctx.message)
-        except:
-            pass
-
-        try:
-            if server.id not in self.settings:
-                await self.init(server, ctx)
-        except:
-            await self.error(ctx)
-
-        if (
-            not self.settings[server.id]["channels"]["general"] and not
-            self.settings[server.id]["channels"]["ban-warn"]
-        ):
-            await self.bot.say(
-                "The log channel is not set yet. Please use `" +
-                ctx.prefix +
-                "bmodset channel` to set it. Aborting..."
-            )
-            return
-        else:
-            if "softban-warn" not in self.settings[server.id]["channels"]:
-                self.settings[server.id]["channels"]["softban-warn"] = None
-            if not self.settings[server.id]["channels"]["softban-warn"]:
-                channel = discord.utils.get(
-                    server.channels, id=self.settings[server.id]["channels"]["general"]
-                )
-            else:
-                channel = discord.utils.get(
-                    server.channels, id=self.settings[server.id]["channels"]["softban-warn"]
-                )
-
-        if user == self.bot.user:
-            await self.bot.say(
-                "Why do you want to report me :C I did nothing wrong (I cannot kick or ban myself)"
-            )
-            return
-
-        elif user.bot:
-            await self.bot.say(
-                "Why trying to report a bot ? I cannot send message to bots, they cannot see them. Instead, go for the manual way."
-            )
-            return
-
-        # This is the embed sent in the moderator log channel
-        modlog = discord.Embed(
-            title="Warning", description="A user got a level 3 (softban) warning"
-        )
-        modlog.add_field(name="User", value=user.mention, inline=True)
-        modlog.add_field(name="Moderator", value=author.mention, inline=True)
-        modlog.add_field(name="Reason", value=reason, inline=False)
-        if user.nick is not None:
-            modlog.set_author(name="{} ~ {} ({})".format(str(user), user.nick, user.id),
-                              icon_url=user.avatar_url)
-        else:
-            modlog.set_author(name="{} | {}".format(str(user), user.id),
-                              icon_url=user.avatar_url)
-        modlog.set_footer(text=ctx.message.timestamp.strftime("%d %b %Y %H:%M"))
-        try:
-            modlog.set_thumbnail(url=self.settings[server.id]["thumbnail"]["warning_embed_softban"])
-        except:
-            pass
-        try:
-            modlog.color = discord.Colour(
-                self.settings[server.id]["colour"]["warning_embed_softban"]
-            )
-        except:
-            pass
-
-        # This is the embed sent to the user
-        target = discord.Embed(
-            description="The moderation team sent you a level 3 (softban) warning. "
-            "(You got banned and unbanned to delete your messages)"
-        )
-        target.add_field(name="Moderator", value=author.mention, inline=False)
-        target.add_field(name="Reason", value=reason, inline=False)
-        target.set_footer(text=ctx.message.timestamp.strftime("%d %b %Y %H:%M"))
-        try:
-            target.set_thumbnail(url=self.settings[server.id]["thumbnail"]["warning_embed_softban"])
-        except:
-            pass
-        try:
-            target.color = discord.Colour(
-                self.settings[server.id]["colour"]["warning_embed_softban"]
-            )
-        except:
-            pass
-
-        try:
-            await self.bot.send_message(user, embed=target)
-        except:
-            modlog.set_footer(
-                text="I couldn't send a message to this user. they may have blocked messages from this server."
-            )
-
-        try:
-            await self.bot.ban(user, 7)
-        except:
-            await self.bot.say(
-                "I cannot ban this user, they are higher than me in the role hierarchy. Aborting..."
-            )
-            await self.bot.send_message(
-                channel, content="The user was not banned. Check my permissions", embed=modlog
-            )
-            await self.add_case(
-                level="Softban",
-                user=user,
-                reason=reason,
-                timestamp=ctx.message.timestamp.strftime("%d %b %Y %H:%M"),
-                server=server,
-                applied=0,
-                ctx=ctx,
-            )
-            return
-        else:
-            await self.bot.unban(server, user)
-
-        await self.bot.send_message(channel, embed=modlog)
-
-        await self.add_case(
-            level="Softban",
-            user=user,
-            reason=reason,
-            timestamp=ctx.message.timestamp.strftime("%d %b %Y %H:%M"),
-            server=server,
-            applied=1,
-            ctx=ctx,
-        )
-
-    @checks.mod_or_permissions(administrator=True)
     @warn.command(pass_context=True, no_pm=True, aliases="4")
     async def ban(self, ctx, user: discord.Member, *, reason: str):
         """Bans the user"""
@@ -1730,11 +1593,8 @@ thumbnail's URL pictures:
                 return
 
             else:
-                await self.bot.say("You don't have any warning yet")
+                await self.bot.say("You don't have any warnings yet")
                 return
-
-        if "softban-warn" not in history[user.id]:
-            history[user.id]["softban-warn"] = 0
 
         if case < 0 or case > history[user.id]["total-warns"]:
             await self.bot.say("That case does not exist")
@@ -1747,12 +1607,10 @@ thumbnail's URL pictures:
 
             e.add_field(
                 name=u"\u2063",
-                value="**Total warns:** {}\n\nSimple warns: {}\nKick warns: {}\nSoftban warns: {}\nBan warns: {}".format(
+                value="**Total warns:** {}\n\nSimple warns: {}\nKick warns: {}".format(
                     str(history[user.id]["total-warns"]),
                     str(history[user.id]["simple-warn"]),
                     str(history[user.id]["kick-warn"]),
-                    str(history[user.id]["softban-warn"]),
-                    str(history[user.id]["ban-warn"]),
                 ),
             )
 
@@ -1916,7 +1774,7 @@ thumbnail's URL pictures:
             return
 
         if user.id not in history:
-            await self.bot.say("That user does not have any warning yet")
+            await self.bot.say("That user does not have any warnings yet")
             return
 
         if case < 0 or case > history[user.id]["total-warns"]:
