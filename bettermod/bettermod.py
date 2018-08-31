@@ -12,8 +12,9 @@ from pathlib import Path
 
 
 class BetterMod:
-    # Better moderation commands
-    # BetterMod: Modified by kportalz for use by TT
+    """Better moderation commands
+
+    Report a bug or ask a question: https://discord.gg/WsTGeQ"""
 
     def __init__(self, bot):
         self.bot = bot
@@ -71,7 +72,7 @@ class BetterMod:
 
         if error_file == 1:
             message_file += (
-                "The files were successfully re-created. Try again your command (you may need to set your local settings again)"
+                "The files were successfully re-created. Try again your command (you may need to sent your local settings again)"
             )
             await self.bot.say(message_file)
 
@@ -206,7 +207,7 @@ class BetterMod:
                 e = discord.Embed(description="The case {} was deleted".format(str(i)))
                 e.set_author(name=user.name, icon_url=user.avatar_url)
             else:
-                e = discord.Embed(description="Case {} information".format(str(i)))
+                e = discord.Embed(description="Case {} informations".format(str(i)))
                 e.set_author(name=user.name, icon_url=user.avatar_url)
 
                 e.add_field(
@@ -232,11 +233,9 @@ class BetterMod:
                 )
 
             try:
-                msg = await
-                self.bot.say(embed=e)
+                msg = await self.bot.say(embed=e)
             except:
-                await
-                self.error(ctx)
+                await self.error(ctx)
                 return
 
         try:
@@ -249,8 +248,7 @@ class BetterMod:
 
         while True:
 
-            response = await
-            self.bot.wait_for_reaction(
+            response = await self.bot.wait_for_reaction(
                 emoji=["❌", "⬅", "➡"], user=ctx.message.author, message=msg, timeout=30
             )
             await asyncio.sleep(0.2)
@@ -331,7 +329,7 @@ class BetterMod:
                 if history[user.id]["case{}".format(str(i))]["deleted"] == 1:
                     i = i - 1
 
-                e = discord.Embed(description="Case {} information".format(str(i)))
+                e = discord.Embed(description="Case {} informations".format(str(i)))
                 e.set_author(name=user.name, icon_url=user.avatar_url)
 
                 e.add_field(
@@ -467,8 +465,7 @@ thumbnail's URL pictures:
         Give no argument to disable mention."""
 
         if ctx.message.server.id not in self.settings:
-            await
-            self.init(ctx.message.server, ctx)
+            await self.init(ctx.message.server, ctx)
 
         if role is None:
             self.settings[ctx.message.server.id]["role"] = None
@@ -476,25 +473,21 @@ thumbnail's URL pictures:
             try:
                 dataIO.save_json("data/bettermod/settings.json", self.settings)
             except:
-                await
-                self.error(ctx)
+                await self.error(ctx)
 
-            await
-            self.bot.say("The role mention is now disabled")
+            await self.bot.say("The role mention is now disabled")
 
         else:
 
             object = discord.utils.get(ctx.message.server.roles, name=role)
 
             if object is None:
-                await
-                self.bot.say("The role cannot be found. Please give exact role name")
+                await self.bot.say("The role cannot be found. Please give exact role name")
                 return
 
             if not object.mentionable:
-                await
-                self.bot.say(
-                    "The role cannot be mentioned. Please modify its settings to enable `Allow anyone to @mention this role`"
+                await self.bot.say(
+                    "The role cannot be mentionned. Please modify its settings to enable `Allow anyone to @mention this role`"
                 )
                 return
 
@@ -503,12 +496,10 @@ thumbnail's URL pictures:
             try:
                 dataIO.save_json("data/bettermod/settings.json", self.settings)
             except:
-                await
-                self.error(ctx)
+                await self.error(ctx)
 
-            await
-            self.bot.say(
-                "The role {} will now be mentioned when a report is sent".format(object.name)
+            await self.bot.say(
+                "The role {} will now be mentionned when a report is send".format(object.name)
             )
 
     @bmodset.command(pass_context=True, no_pm=True)
@@ -520,8 +511,7 @@ thumbnail's URL pictures:
         server = ctx.message.server
 
         if ctx.message.server.id not in self.settings:
-            await
-            self.init(ctx.message.server, ctx)
+            await self.init(ctx.message.server, ctx)
 
         if self.settings[server.id]["proof"] is False:
             self.settings[server.id]["proof"] = True
@@ -529,12 +519,10 @@ thumbnail's URL pictures:
             try:
                 dataIO.save_json("data/bettermod/settings.json", self.settings)
             except:
-                await
-                self.error(ctx)
+                await self.error(ctx)
                 return
 
-            await
-            self.bot.say(
+            await self.bot.say(
                 "The proof-needed mode is now enabled. Users will need to attach a link/file to their message in order to report. Type {}bmodset proof` again to disable it"
             )
 
@@ -544,12 +532,10 @@ thumbnail's URL pictures:
             try:
                 dataIO.save_json("data/bettermod/settings.json", self.settings)
             except:
-                await
-                self.error(ctx)
+                await self.error(ctx)
                 return
 
-            await
-            self.bot.say(
+            await self.bot.say(
                 "The proof-needed mode is now disabled. Users will no longer need to attach a link/file to their message. Type {}bmodset proof` again to enable it"
             )
 
@@ -562,8 +548,7 @@ thumbnail's URL pictures:
         """
 
         if ctx.invoked_subcommand is None or isinstance(ctx.invoked_subcommand, commands.Group):
-            await
-            self.bot.send_cmd_help(ctx)
+            await self.bot.send_cmd_help(ctx)
 
     @color.command(pass_context=True, no_pm=True, name="report")
     async def report_color(self, ctx, color: str = "000000"):
@@ -577,11 +562,9 @@ thumbnail's URL pictures:
 
         try:
             if server.id not in self.settings:
-                await
-                self.init(server, ctx)
+                await self.init(server, ctx)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
 
         try:
             color = color.replace("#", "").replace("0x", "")[:6]
@@ -593,11 +576,9 @@ thumbnail's URL pictures:
         try:
             dataIO.save_json("data/bettermod/settings.json", self.settings)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
             return
-        await
-        self.bot.say(
+        await self.bot.say(
             "New embed color has been registered. If the value is invalid, the color will not change."
         )
 
@@ -612,11 +593,9 @@ thumbnail's URL pictures:
         server = ctx.message.server
         try:
             if server.id not in self.settings:
-                await
-                self.init(server, ctx)
+                await self.init(server, ctx)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
 
         try:
             color = color.replace("#", "").replace("0x", "")[:6]
@@ -628,11 +607,9 @@ thumbnail's URL pictures:
         try:
             dataIO.save_json("data/bettermod/settings.json", self.settings)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
             return
-        await
-        self.bot.say(
+        await self.bot.say(
             "New embed color has been registered. If the value is invalid, the color will not change."
         )
 
@@ -647,11 +624,9 @@ thumbnail's URL pictures:
 
         try:
             if server.id not in self.settings:
-                await
-                self.init(server, ctx)
+                await self.init(server, ctx)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
 
         try:
             color = color.replace("#", "").replace("0x", "")[:6]
@@ -663,11 +638,9 @@ thumbnail's URL pictures:
         try:
             dataIO.save_json("data/bettermod/settings.json", self.settings)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
             return
-        await
-        self.bot.say(
+        await self.bot.say(
             "New embed color has been registered. If the value is invalid, the color will not change."
         )
 
@@ -683,11 +656,9 @@ thumbnail's URL pictures:
 
         try:
             if server.id not in self.settings:
-                await
-                self.init(server, ctx)
+                await self.init(server, ctx)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
 
         try:
             color = color.replace("#", "").replace("0x", "")[:6]
@@ -699,11 +670,9 @@ thumbnail's URL pictures:
         try:
             dataIO.save_json("data/bettermod/settings.json", self.settings)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
             return
-        await
-        self.bot.say(
+        await self.bot.say(
             "New embed color has been registered. If the value is invalid, the color will not change."
         )
 
@@ -719,11 +688,9 @@ thumbnail's URL pictures:
 
         try:
             if server.id not in self.settings:
-                await
-                self.init(server, ctx)
+                await self.init(server, ctx)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
 
         try:
             color = color.replace("#", "").replace("0x", "")[:6]
@@ -735,11 +702,9 @@ thumbnail's URL pictures:
         try:
             dataIO.save_json("data/bettermod/settings.json", self.settings)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
             return
-        await
-        self.bot.say(
+        await self.bot.say(
             "New embed color has been registered. If the value is invalid, the color will not change."
         )
 
@@ -748,8 +713,7 @@ thumbnail's URL pictures:
         """Set the embed's thumbnail in the modlog"""
 
         if ctx.invoked_subcommand is None or isinstance(ctx.invoked_subcommand, commands.Group):
-            await
-            self.bot.send_cmd_help(ctx)
+            await self.bot.send_cmd_help(ctx)
 
     @thumbnail.command(pass_context=True, no_pm=True, name="report")
     async def report_thumbnail(self, ctx, url: str):
@@ -759,30 +723,25 @@ thumbnail's URL pictures:
 
         try:
             if server.id not in self.settings:
-                await
-                self.init(server, ctx)
+                await self.init(server, ctx)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
 
         if not url.endswith((".jpg", ".png", ".gif")) and not url.startswith(
-                ("http://", "https://")
+            ("http://", "https://")
         ):
-            await
-            self.bot.say("The URL given is not valid")
+            await self.bot.say("The URL given is not valid")
             return
 
         else:
             try:
                 self.settings[server.id]["thumbnail"]["report_embed"] = url
                 dataIO.save_json("data/bettermod/settings.json", self.settings)
-                await
-                self.bot.say(
+                await self.bot.say(
                     "The new thumbnail for the report embed has been set. If the URL is not valid, no thumbnail will be shown in the embed."
                 )
             except:
-                await
-                self.error(ctx)
+                await self.error(ctx)
                 return
 
     @thumbnail.command(name="simple", pass_context=True, no_pm=True, aliases="1")
@@ -792,30 +751,25 @@ thumbnail's URL pictures:
 
         try:
             if server.id not in self.settings:
-                await
-                self.init(server, ctx)
+                await self.init(server, ctx)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
 
         if not url.endswith((".jpg", ".png", ".gif")) and not url.startswith(
-                ("http://", "https://")
+            ("http://", "https://")
         ):
-            await
-            self.bot.say("The URL given is not valid")
+            await self.bot.say("The URL given is not valid")
             return
 
         else:
             try:
                 self.settings[server.id]["thumbnail"]["warning_embed_simple"] = url
                 dataIO.save_json("data/bettermod/settings.json", self.settings)
-                await
-                self.bot.say(
+                await self.bot.say(
                     "The new thumbnail for the simple warning embed has been set. If the URL is not valid, no thumbnail will be shown in the embed."
                 )
             except:
-                await
-                self.error(ctx)
+                await self.error(ctx)
                 return
 
     @thumbnail.command(pass_context=True, no_pm=True, name="kick", aliases="2")
@@ -826,30 +780,25 @@ thumbnail's URL pictures:
 
         try:
             if server.id not in self.settings:
-                await
-                self.init(server, ctx)
+                await self.init(server, ctx)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
 
         if not url.endswith((".jpg", ".png", ".gif")) and not url.startswith(
-                ("http://", "https://")
+            ("http://", "https://")
         ):
-            await
-            self.bot.say("The URL given is not valid")
+            await self.bot.say("The URL given is not valid")
             return
 
         else:
             try:
                 self.settings[server.id]["thumbnail"]["warning_embed_kick"] = url
                 dataIO.save_json("data/bettermod/settings.json", self.settings)
-                await
-                self.bot.say(
+                await self.bot.say(
                     "The new thumbnail for the kick warning embed has been set. If the URL is not valid, no thumbnail will be shown in the embed."
                 )
             except:
-                await
-                self.error(ctx)
+                await self.error(ctx)
                 return
 
     @thumbnail.command(pass_context=True, no_pm=True, name="softban", aliases="3")
@@ -860,30 +809,25 @@ thumbnail's URL pictures:
 
         try:
             if server.id not in self.settings:
-                await
-                self.init(server, ctx)
+                await self.init(server, ctx)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
 
         if not url.endswith((".jpg", ".png", ".gif")) and not url.startswith(
-                ("http://", "https://")
+            ("http://", "https://")
         ):
-            await
-            self.bot.say("The URL given is not valid")
+            await self.bot.say("The URL given is not valid")
             return
 
         else:
             try:
                 self.settings[server.id]["thumbnail"]["warning_embed_softban"] = url
                 dataIO.save_json("data/bettermod/settings.json", self.settings)
-                await
-                self.bot.say(
+                await self.bot.say(
                     "The new thumbnail for the ban warning embed has been set. If the URL is not valid, no thumbnail will be shown in the embed."
                 )
             except:
-                await
-                self.error(ctx)
+                await self.error(ctx)
                 return
 
     @thumbnail.command(pass_context=True, no_pm=True, name="ban", aliases="4")
@@ -893,30 +837,25 @@ thumbnail's URL pictures:
 
         try:
             if server.id not in self.settings:
-                await
-                self.init(server, ctx)
+                await self.init(server, ctx)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
 
         if not url.endswith((".jpg", ".png", ".gif")) and not url.startswith(
-                ("http://", "https://")
+            ("http://", "https://")
         ):
-            await
-            self.bot.say("The URL given is not valid")
+            await self.bot.say("The URL given is not valid")
             return
 
         else:
             try:
                 self.settings[server.id]["thumbnail"]["warning_embed_ban"] = url
                 dataIO.save_json("data/bettermod/settings.json", self.settings)
-                await
-                self.bot.say(
+                await self.bot.say(
                     "The new thumbnail for the ban warning embed has been set. If the URL is not valid, no thumbnail will be shown in the embed."
                 )
             except:
-                await
-                self.error(ctx)
+                await self.error(ctx)
                 return
 
     @bmodset.group(pass_context=True, no_pm=True, hidden=True)
@@ -924,8 +863,7 @@ thumbnail's URL pictures:
         """Set separately warnings and reports log channels"""
 
         if not ctx.invoked_subcommand or isinstance(ctx.invoked_subcommand, commands.Group):
-            await
-            self.bot.send_cmd_help(ctx)
+            await self.bot.send_cmd_help(ctx)
 
     @channels.command(pass_context=True, no_pm=True, name="report")
     async def report_channel(self, ctx, channel: discord.Channel):
@@ -940,20 +878,16 @@ thumbnail's URL pictures:
 
         try:
             if server.id not in self.settings:
-                await
-                self.init(server, ctx)
+                await self.init(server, ctx)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
 
         self.settings[server.id]["channels"]["report"] = channel.id
-        await
-        self.bot.say("Reports will be send to **" + channel.name + "**.")
+        await self.bot.say("Reports will be send to **" + channel.name + "**.")
         try:
             dataIO.save_json("data/bettermod/settings.json", self.settings)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
             return
 
     @channels.command(pass_context=True, no_pm=True, name="simple")
@@ -969,20 +903,16 @@ thumbnail's URL pictures:
 
         try:
             if server.id not in self.settings:
-                await
-                self.init(server, ctx)
+                await self.init(server, ctx)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
 
         self.settings[server.id]["channels"]["simple-warn"] = channel.id
-        await
-        self.bot.say("Simple warnings will be send to **" + channel.name + "**.")
+        await self.bot.say("Simple warnings will be send to **" + channel.name + "**.")
         try:
             dataIO.save_json("data/bettermod/settings.json", self.settings)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
             return
 
     @channels.command(pass_context=True, no_pm=True, name="kick")
@@ -998,20 +928,16 @@ thumbnail's URL pictures:
 
         try:
             if server.id not in self.settings:
-                await
-                self.init(server, ctx)
+                await self.init(server, ctx)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
 
         self.settings[server.id]["channels"]["kick-warn"] = channel.id
-        await
-        self.bot.say("Kick warnings will be send to **" + channel.name + "**.")
+        await self.bot.say("Kick warnings will be send to **" + channel.name + "**.")
         try:
             dataIO.save_json("data/bettermod/settings.json", self.settings)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
             return
 
     @channels.command(pass_context=True, no_pm=True, name="softban")
@@ -1027,20 +953,16 @@ thumbnail's URL pictures:
 
         try:
             if server.id not in self.settings:
-                await
-                self.init(server, ctx)
+                await self.init(server, ctx)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
 
         self.settings[server.id]["channels"]["softban-warn"] = channel.id
-        await
-        self.bot.say("Ban warnings will be send to **" + channel.name + "**.")
+        await self.bot.say("Ban warnings will be send to **" + channel.name + "**.")
         try:
             dataIO.save_json("data/bettermod/settings.json", self.settings)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
             return
 
     @channels.command(pass_context=True, no_pm=True, name="ban")
@@ -1056,20 +978,16 @@ thumbnail's URL pictures:
 
         try:
             if server.id not in self.settings:
-                await
-                self.init(server, ctx)
+                await self.init(server, ctx)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
 
         self.settings[server.id]["channels"]["ban-warn"] = channel.id
-        await
-        self.bot.say("Ban warnings will be send to **" + channel.name + "**.")
+        await self.bot.say("Ban warnings will be send to **" + channel.name + "**.")
         try:
             dataIO.save_json("data/bettermod/settings.json", self.settings)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
             return
 
     @bmodset.command(pass_context=True)
@@ -1088,15 +1006,12 @@ thumbnail's URL pictures:
 
         try:
             if server.id not in self.settings:
-                await
-                self.init(server, ctx)
+                await self.init(server, ctx)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
 
         if len(message) > 1000:
-            await
-            self.bot.say(
+            await self.bot.say(
                 "That message is too long! Think about the lengh of the report, the message "
                 "could have more than 2000 characters."
             )
@@ -1106,11 +1021,9 @@ thumbnail's URL pictures:
         try:
             dataIO.save_json("data/bettermod/settings.json", self.settings)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
             return
-        await
-        self.bot.say(
+        await self.bot.say(
             "The new message has been set. Here is an example of what it will do:\n\n" +
             message.format(author=ctx.message.author, reason="Laggron did dumb coding mistakes again!",
                            server=ctx.message.server, id="262536")
@@ -1145,19 +1058,17 @@ thumbnail's URL pictures:
             # files downloaded, the message can be deleted
 
         try:
-            await
-            self.bot.delete_message(ctx.message)
+            await self.bot.delete_message(ctx.message)
         except:
             pass
 
         if user is None or reason is None:
             try:
-                await
-                self.bot.send_message(ctx.message.author,
-                                      "The given arguments are wrong. Please do so: `{}report @user your reason`.\n"
-                                      "If you omit an argument, the report won't be sent. You can also attach a file "
-                                      "to your report to bring a proof.".format(ctx.prefix)
-                                      )
+                await self.bot.send_message(ctx.message.author,
+                                            "The given arguments are wrong. Please do so: `{}report @user your reason`.\n"
+                                            "If you omit an argument, the report won't be sent. You can also attach a file "
+                                            "to your report to bring a proof.".format(ctx.prefix)
+                                            )
             except discord.errors.Forbidden:
                 pass
 
@@ -1165,19 +1076,16 @@ thumbnail's URL pictures:
 
         try:
             if server.id not in self.settings:
-                await
-                self.init(server, ctx)
+                await self.init(server, ctx)
         except:
             # file I/O errors
-            await
-            self.error(ctx)
+            await self.error(ctx)
 
         if (
-                not self.settings[server.id]["channels"]["general"] and not
-        self.settings[server.id]["channels"]["report"]
+            not self.settings[server.id]["channels"]["general"] and not
+            self.settings[server.id]["channels"]["report"]
         ):  # no modlog channel found
-            await
-            self.bot.say(
+            await self.bot.say(
                 "The log channel is not set yet. Please use "
                 "`{}bmodset channel` to set it. Aborting...".format(ctx.prefix)
             )
@@ -1193,11 +1101,9 @@ thumbnail's URL pictures:
                     server.channels, id=self.settings[server.id]["channels"]["report"]
                 )
 
-        if self.settings[server.id][
-            "proof"] is True and ctx.message.attachments == [] and "http" not in ctx.message.content:
+        if self.settings[server.id]["proof"] is True and ctx.message.attachments == [] and "http" not in ctx.message.content:
             # no attachment, no link, but a proof is required
-            await
-            self.bot.send_message(
+            await self.bot.send_message(
                 author,
                 "Proof-need mode is enabled on this server. Please attach a file or a link to your report in order to send it (screenshot the proof)",
             )
@@ -1246,38 +1152,31 @@ thumbnail's URL pictures:
 
         if self.settings[server.id]["role"] is None:
             try:
-                await
-                self.bot.send_message(channel, embed=report)
+                await self.bot.send_message(channel, embed=report)
             except:
-                await
-                self.error(ctx)
+                await self.error(ctx)
 
         else:
             role = discord.utils.get(server.roles, id=self.settings[server.id]["role"])
             try:
-                await
-                self.bot.send_message(channel, embed=report, content=role.mention)
+                await self.bot.send_message(channel, embed=report, content=role.mention)
             except:
-                await
-                self.error(ctx)
+                await self.error(ctx)
 
         if files:
             for file in files:
                 try:
-                    await
-                    self.bot.send_file(channel, file)
+                    await self.bot.send_file(channel, file)
                 except discord.errors.Forbidden:
-                    await
-                    self.bot.say(
+                    await self.bot.say(
                         "The user attached some files but I couldn't upload them here. "
                         "Please check my permissions."
                     )
                     break
 
         try:
-            await
-            self.bot.send_message(author, self.settings[server.id]["report_message"].format(
-                author=ctx.message.author, reason=reason, server=server, id=report_id))
+            await self.bot.send_message(author, self.settings[server.id]["report_message"].format(
+                                        author=ctx.message.author, reason=reason, server=server, id=report_id))
         except:
             pass
         self.clear_cache()
@@ -1287,8 +1186,7 @@ thumbnail's URL pictures:
     async def warn(self, ctx):
         """Send a warning to a user and store it"""
         if ctx.invoked_subcommand is None:
-            await
-            self.bot.send_cmd_help(ctx)
+            await self.bot.send_cmd_help(ctx)
 
     @checks.mod_or_permissions(administrator=True)
     @warn.command(pass_context=True, no_pm=True, aliases="1")
@@ -1298,25 +1196,21 @@ thumbnail's URL pictures:
         author = ctx.message.author
 
         try:
-            await
-            self.bot.delete_message(ctx.message)
+            await self.bot.delete_message(ctx.message)
         except:
             pass
 
         try:
             if server.id not in self.settings:
-                await
-                self.init(server, ctx)
+                await self.init(server, ctx)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
 
         if (
-                not self.settings[server.id]["channels"]["general"] and not
-        self.settings[server.id]["channels"]["simple-warn"]
+            not self.settings[server.id]["channels"]["general"] and not
+            self.settings[server.id]["channels"]["simple-warn"]
         ):
-            await
-            self.bot.say(
+            await self.bot.say(
                 "The log channel is not set yet. Please use `" +
                 ctx.prefix +
                 "bmodset channel` to set it. Aborting..."
@@ -1333,15 +1227,13 @@ thumbnail's URL pictures:
             )
 
         if user == self.bot.user:
-            await
-            self.bot.say(
+            await self.bot.say(
                 "Why do you want to report me :C I did nothing wrong (I cannot kick or ban myself)"
             )
             return
 
         elif user.bot:
-            await
-            self.bot.say(
+            await self.bot.say(
                 "Why trying to report a bot ? I cannot send message to bots, they cannot see them. Instead, go for the manual way."
             )
             return
@@ -1368,6 +1260,7 @@ thumbnail's URL pictures:
 
         # This is the embed sent to the user
         target = discord.Embed(description="The moderation team sent you a level 1 warning")
+        target.add_field(name="Moderator", value=author.mention, inline=False)
         target.add_field(name="Reason", value=reason, inline=False)
         target.set_footer(text=ctx.message.timestamp.strftime("%d %b %Y %H:%M"))
         target.set_thumbnail(url=self.settings[server.id]["thumbnail"]["warning_embed_simple"])
@@ -1379,18 +1272,15 @@ thumbnail's URL pictures:
             pass
 
         try:
-            await
-            self.bot.send_message(user, embed=target)
+            await self.bot.send_message(user, embed=target)
         except:
             modlog.set_footer(
-                text="I couldn't send a message to this user. They may have blocked messages from this server."
+                text="I couldn't send a message to this user. they may have blocked messages from this server."
             )
 
-        await
-        self.bot.send_message(channel, embed=modlog)
+        await self.bot.send_message(channel, embed=modlog)
 
-        await
-        self.add_case(
+        await self.add_case(
             level="Simple",
             user=user,
             reason=reason,
@@ -1406,8 +1296,7 @@ thumbnail's URL pictures:
         """Kicks the user"""
 
         try:
-            await
-            self.bot.delete_message(ctx.message)
+            await self.bot.delete_message(ctx.message)
         except:
             pass
 
@@ -1416,18 +1305,15 @@ thumbnail's URL pictures:
 
         try:
             if server.id not in self.settings:
-                await
-                self.init(server, ctx)
+                await self.init(server, ctx)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
 
         if (
-                not self.settings[server.id]["channels"]["general"] and not
-        self.settings[server.id]["channels"]["kick-warn"]
+            not self.settings[server.id]["channels"]["general"] and not
+            self.settings[server.id]["channels"]["kick-warn"]
         ):
-            await
-            self.bot.say(
+            await self.bot.say(
                 "The log channel is not set yet. Please use `" +
                 ctx.prefix +
                 "bmodset channel` to set it. Aborting..."
@@ -1444,15 +1330,13 @@ thumbnail's URL pictures:
                 )
 
         if user == self.bot.user:
-            await
-            self.bot.say(
+            await self.bot.say(
                 "Why do you want to report me :C I did nothing wrong (I cannot kick or ban myself)"
             )
             return
 
         elif user.bot:
-            await
-            self.bot.say(
+            await self.bot.say(
                 "Why trying to report a bot ? I cannot send message to bots, they cannot see them. Instead, go for the manual way."
             )
             return
@@ -1476,7 +1360,7 @@ thumbnail's URL pictures:
             pass
 
         # This is the embed sent to the user
-        target = discord.Embed(description="The moderation team set you a level 2 (kick) warning")
+        target = discord.Embed(description="The moderation team sent you a level 2 (kick) warning")
         target.add_field(name="Moderator", value=author.mention, inline=False)
         target.add_field(name="Reason", value=reason, inline=False)
         target.set_footer(text=ctx.message.timestamp.strftime("%d %b %Y %H:%M"))
@@ -1487,27 +1371,22 @@ thumbnail's URL pictures:
             pass
 
         try:
-            await
-            self.bot.send_message(user, embed=target)
+            await self.bot.send_message(user, embed=target)
         except:
             modlog.set_footer(
-                text="I couldn't send a message to this user. They may have blocked messages from this server."
+                text="I couldn't send a message to this user. they may have blocked messages from this server."
             )
 
         try:
-            await
-            self.bot.kick(user)
+            await self.bot.kick(user)
         except:
-            await
-            self.bot.say(
+            await self.bot.say(
                 "I cannot kick this user, they are higher than me in the role hierarchy. Aborting..."
             )
-            await
-            self.bot.send_message(
+            await self.bot.send_message(
                 channel, content="The user was not kicked. Check my permissions", embed=modlog
             )
-            await
-            self.add_case(
+            await self.add_case(
                 level="Kick",
                 user=user,
                 reason=reason,
@@ -1518,11 +1397,9 @@ thumbnail's URL pictures:
             )
             return
 
-        await
-        self.bot.send_message(channel, embed=modlog)
+        await self.bot.send_message(channel, embed=modlog)
 
-        await
-        self.add_case(
+        await self.add_case(
             level="Kick",
             user=user,
             reason=reason,
@@ -1540,25 +1417,21 @@ thumbnail's URL pictures:
         author = ctx.message.author
 
         try:
-            await
-            self.bot.delete_message(ctx.message)
+            await self.bot.delete_message(ctx.message)
         except:
             pass
 
         try:
             if server.id not in self.settings:
-                await
-                self.init(server, ctx)
+                await self.init(server, ctx)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
 
         if (
-                not self.settings[server.id]["channels"]["general"] and not
-        self.settings[server.id]["channels"]["ban-warn"]
+            not self.settings[server.id]["channels"]["general"] and not
+            self.settings[server.id]["channels"]["ban-warn"]
         ):
-            await
-            self.bot.say(
+            await self.bot.say(
                 "The log channel is not set yet. Please use `" +
                 ctx.prefix +
                 "bmodset channel` to set it. Aborting..."
@@ -1577,15 +1450,13 @@ thumbnail's URL pictures:
                 )
 
         if user == self.bot.user:
-            await
-            self.bot.say(
+            await self.bot.say(
                 "Why do you want to report me :C I did nothing wrong (I cannot kick or ban myself)"
             )
             return
 
         elif user.bot:
-            await
-            self.bot.say(
+            await self.bot.say(
                 "Why trying to report a bot ? I cannot send message to bots, they cannot see them. Instead, go for the manual way."
             )
             return
@@ -1617,8 +1488,8 @@ thumbnail's URL pictures:
 
         # This is the embed sent to the user
         target = discord.Embed(
-            description="The moderation team set you a level 3 (softban) warning. "
-                        "(You got banned and unbanned to delete your messages)"
+            description="The moderation team sent you a level 3 (softban) warning. "
+            "(You got banned and unbanned to delete your messages)"
         )
         target.add_field(name="Moderator", value=author.mention, inline=False)
         target.add_field(name="Reason", value=reason, inline=False)
@@ -1635,27 +1506,22 @@ thumbnail's URL pictures:
             pass
 
         try:
-            await
-            self.bot.send_message(user, embed=target)
+            await self.bot.send_message(user, embed=target)
         except:
             modlog.set_footer(
-                text="I couldn't send a message to this user. They may have blocked messages from this server."
+                text="I couldn't send a message to this user. they may have blocked messages from this server."
             )
 
         try:
-            await
-            self.bot.ban(user, 7)
+            await self.bot.ban(user, 7)
         except:
-            await
-            self.bot.say(
+            await self.bot.say(
                 "I cannot ban this user, they are higher than me in the role hierarchy. Aborting..."
             )
-            await
-            self.bot.send_message(
+            await self.bot.send_message(
                 channel, content="The user was not banned. Check my permissions", embed=modlog
             )
-            await
-            self.add_case(
+            await self.add_case(
                 level="Softban",
                 user=user,
                 reason=reason,
@@ -1666,14 +1532,11 @@ thumbnail's URL pictures:
             )
             return
         else:
-            await
-            self.bot.unban(server, user)
+            await self.bot.unban(server, user)
 
-        await
-        self.bot.send_message(channel, embed=modlog)
+        await self.bot.send_message(channel, embed=modlog)
 
-        await
-        self.add_case(
+        await self.add_case(
             level="Softban",
             user=user,
             reason=reason,
@@ -1691,25 +1554,21 @@ thumbnail's URL pictures:
         author = ctx.message.author
 
         try:
-            await
-            self.bot.delete_message(ctx.message)
+            await self.bot.delete_message(ctx.message)
         except:
             pass
 
         try:
             if server.id not in self.settings:
-                await
-                self.init(server, ctx)
+                await self.init(server, ctx)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
 
         if (
-                not self.settings[server.id]["channels"]["general"] and not
-        self.settings[server.id]["channels"]["ban-warn"]
+            not self.settings[server.id]["channels"]["general"] and not
+            self.settings[server.id]["channels"]["ban-warn"]
         ):
-            await
-            self.bot.say(
+            await self.bot.say(
                 "The log channel is not set yet. Please use `" +
                 ctx.prefix +
                 "bmodset channel` to set it. Aborting..."
@@ -1726,15 +1585,13 @@ thumbnail's URL pictures:
                 )
 
         if user == self.bot.user:
-            await
-            self.bot.say(
+            await self.bot.say(
                 "Why do you want to report me :C I did nothing wrong (I cannot kick or ban myself)"
             )
             return
 
         elif user.bot:
-            await
-            self.bot.say(
+            await self.bot.say(
                 "Why trying to report a bot ? I cannot send message to bots, they cannot see them. Instead, go for the manual way."
             )
             return
@@ -1758,7 +1615,7 @@ thumbnail's URL pictures:
             pass
 
         # This is the embed sent to the user
-        target = discord.Embed(description="The moderation team set you a level 4 (ban) warning")
+        target = discord.Embed(description="The moderation team sent you a level 4 (ban) warning")
         target.add_field(name="Moderator", value=author.mention, inline=False)
         target.add_field(name="Reason", value=reason, inline=False)
         target.set_footer(text=ctx.message.timestamp.strftime("%d %b %Y %H:%M"))
@@ -1769,27 +1626,22 @@ thumbnail's URL pictures:
             pass
 
         try:
-            await
-            self.bot.send_message(user, embed=target)
+            await self.bot.send_message(user, embed=target)
         except:
             modlog.set_footer(
-                text="I couldn't send a message to this user. They may have blocked messages from this server."
+                text="I couldn't send a message to this user. they may have blocked messages from this server."
             )
 
         try:
-            await
-            self.bot.ban(user)
+            await self.bot.ban(user)
         except:
-            await
-            self.bot.say(
-                "I cannot ban this user, They are higher than me in the role hierarchy. Aborting..."
+            await self.bot.say(
+                "I cannot ban this user, they are higher than me in the role hierarchy. Aborting..."
             )
-            await
-            self.bot.send_message(
+            await self.bot.send_message(
                 channel, content="The user was not banned. Check my permissions", embed=modlog
             )
-            await
-            self.add_case(
+            await self.add_case(
                 level="Ban",
                 user=user,
                 reason=reason,
@@ -1800,11 +1652,9 @@ thumbnail's URL pictures:
             )
             return
 
-        await
-        self.bot.send_message(channel, embed=modlog)
+        await self.bot.send_message(channel, embed=modlog)
 
-        await
-        self.add_case(
+        await self.add_case(
             level="Ban",
             user=user,
             reason=reason,
@@ -1820,8 +1670,7 @@ thumbnail's URL pictures:
         """Edit warnings' reasons or remove them"""
 
         if ctx.invoked_subcommand is None:
-            await
-            self.bot.send_cmd_help(ctx)
+            await self.bot.send_cmd_help(ctx)
 
     @commands.command(pass_context=True, no_pm=True)
     async def bcheck(self, ctx, user: discord.Member = None, case: int = 0):
@@ -1839,15 +1688,13 @@ thumbnail's URL pictures:
             try:
                 dataIO.save_json("data/bettermod/history/{}.json".format(server.id), data={})
             except:
-                await
-                self.error(ctx)
+                await self.error(ctx)
                 return
 
         try:
             history = dataIO.load_json("data/bettermod/history/{}.json".format(server.id))
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
             return
 
         if user is None:
@@ -1855,9 +1702,9 @@ thumbnail's URL pictures:
             allowed = True
 
         if (
-                author == server.owner or
-                author.id == self.bot.settings.owner or
-                author.server_permissions.administrator
+            author == server.owner or
+            author.id == self.bot.settings.owner or
+            author.server_permissions.administrator
         ):
             allowed = True
 
@@ -1874,27 +1721,23 @@ thumbnail's URL pictures:
                     allowed = True
 
         if allowed is False:
-            await
-            self.bot.say("You are not allowed to check others's warnings")
+            await self.bot.say("You are not allowed to check others's warnings")
             return
 
         if user.id not in history:
             if user != author:
-                await
-                self.bot.say("That user doesn't have any warnings yet")
+                await self.bot.say("That user doesn't have any warnings yet")
                 return
 
             else:
-                await
-                self.bot.say("You don't have any warning yet")
+                await self.bot.say("You don't have any warning yet")
                 return
 
         if "softban-warn" not in history[user.id]:
             history[user.id]["softban-warn"] = 0
 
         if case < 0 or case > history[user.id]["total-warns"]:
-            await
-            self.bot.say("That case does not exist")
+            await self.bot.say("That case does not exist")
             return
 
         if case == 0:
@@ -1916,27 +1759,22 @@ thumbnail's URL pictures:
             e.set_footer(text="Click on the reaction to see all of the cases")
 
             try:
-                msg = await
-                self.bot.say(embed=e)
+                msg = await self.bot.say(embed=e)
             except:
-                await
-                self.error(ctx)
+                await self.error(ctx)
                 return
 
             i = None
-            await
-            self.check_case(msg, i, ctx=ctx, user=user)
+            await self.check_case(msg, i, ctx=ctx, user=user)
 
         else:
             i = case
-            await
-            self.check_case(msg=None, i=i, ctx=ctx, user=user)
+            await self.check_case(msg=None, i=i, ctx=ctx, user=user)
 
         try:
             dataIO.save_json("data/bettermod/settings.json", self.settings)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
             return
 
     @case.command(pass_context=True)
@@ -1948,28 +1786,24 @@ thumbnail's URL pictures:
             try:
                 dataIO.save_json("data/bettermod/history/{}.json".format(server.id), data={})
             except:
-                await
-                self.error(ctx)
+                await self.error(ctx)
                 return
 
         try:
             history = dataIO.load_json("data/bettermod/history/{}.json".format(server.id))
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
             return
 
         if user.id not in history:
-            await
-            self.bot.say("That user does not have any warning yet")
+            await self.bot.say("That user does not have any warning yet")
             return
 
         if (
-                "case" + str(case) not in history[user.id] or
-                history[user.id]["case{}".format(str(case))]["deleted"] == 1
+            "case" + str(case) not in history[user.id] or
+            history[user.id]["case{}".format(str(case))]["deleted"] == 1
         ):
-            await
-            self.bot.say("That case does not exist or is already deleted")
+            await self.bot.say("That case does not exist or is already deleted")
             return
 
         e = discord.Embed(description="User case {} delete".format(str(case)))
@@ -2019,23 +1853,18 @@ thumbnail's URL pictures:
         e.set_footer(text="Click on the reaction to confirm changes")
 
         try:
-            msg = await
-            self.bot.say(embed=e)
-            await
-            self.bot.add_reaction(msg, "✅")
+            msg = await self.bot.say(embed=e)
+            await self.bot.add_reaction(msg, "✅")
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
             return
 
-        response = await
-        self.bot.wait_for_reaction(
+        response = await self.bot.wait_for_reaction(
             emoji="✅", user=ctx.message.author, message=msg, timeout=30
         )
 
         if response is None:
-            await
-            self.bot.clear_reactions(msg)
+            await self.bot.clear_reactions(msg)
             return
 
         if response.reaction.emoji == "✅":
@@ -2052,14 +1881,11 @@ thumbnail's URL pictures:
             history[user.id]["total-warns"] = history[user.id]["total-warns"] - 1
             history[user.id]["case{}".format(str(case))]["deleted"] = 1
             try:
-                await
-                self.bot.delete_message(msg)
+                await self.bot.delete_message(msg)
             except:
-                await
-                self.error(ctx)
+                await self.error(ctx)
                 return
-            await
-            self.bot.say("The case {} of {} has been deleted".format(str(case), user.name))
+            await self.bot.say("The case {} of {} has been deleted".format(str(case), user.name))
 
         try:
             dataIO.save_json("data/bettermod/settings.json", self.settings)
@@ -2067,8 +1893,7 @@ thumbnail's URL pictures:
                 "data/bettermod/history/{}.json".format(ctx.message.server.id), history
             )
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
             return
 
     @case.command(pass_context=True)
@@ -2081,25 +1906,21 @@ thumbnail's URL pictures:
             try:
                 dataIO.save_json("data/bettermod/history/{}.json".format(server.id), data={})
             except:
-                await
-                self.error(ctx)
+                await self.error(ctx)
                 return
 
         try:
             history = dataIO.load_json("data/bettermod/history/{}.json".format(server.id))
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
             return
 
         if user.id not in history:
-            await
-            self.bot.say("That user does not have any warning yet")
+            await self.bot.say("That user does not have any warning yet")
             return
 
         if case < 0 or case > history[user.id]["total-warns"]:
-            await
-            self.bot.say("That case does not exist")
+            await self.bot.say("That case does not exist")
             return
 
         old_reason = history[user.id]["case{}".format(str(case))]["reason"]
@@ -2112,23 +1933,18 @@ thumbnail's URL pictures:
         e.set_footer(text="Click on the reaction to confirm changes")
 
         try:
-            msg = await
-            self.bot.say(embed=e)
-            await
-            self.bot.add_reaction(msg, "✅")
+            msg = await self.bot.say(embed=e)
+            await self.bot.add_reaction(msg, "✅")
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
             return
 
-        response = await
-        self.bot.wait_for_reaction(
+        response = await self.bot.wait_for_reaction(
             emoji="✅", user=ctx.message.author, message=msg, timeout=30
         )
 
         if response is None:
-            await
-            self.bot.clear_reactions(msg)
+            await self.bot.clear_reactions(msg)
             return
 
         if response.reaction.emoji == "✅":
@@ -2136,15 +1952,12 @@ thumbnail's URL pictures:
 
         dataIO.save_json("data/bettermod/history/{}.json".format(server.id), history)
         try:
-            await
-            self.bot.delete_message(msg)
+            await self.bot.delete_message(msg)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
             return
 
-        await
-        self.bot.say("The new reason has been saved")
+        await self.bot.say("The new reason has been saved")
 
     async def __unload(self):
         self.clear_cache()
@@ -2187,29 +2000,29 @@ def check_version_settings():
             if server != "version":
                 # Add here new body
                 if (
-                        settings[server]["thumbnail"]["report_embed"] ==
-                        "https://cdn.discordapp.com/attachments/303988901570150401/360466192781017088/report.png"
+                    settings[server]["thumbnail"]["report_embed"] ==
+                    "https://cdn.discordapp.com/attachments/303988901570150401/360466192781017088/report.png"
                 ):
                     settings[server]["thumbnail"][
                         "report_embed"
                     ] = "https://i.imgur.com/Bl62rGd.png"
                 if (
-                        settings[server]["thumbnail"]["warning_embed_simple"] ==
-                        "https://cdn.discordapp.com/attachments/303988901570150401/360466192781017088/report.png"
+                    settings[server]["thumbnail"]["warning_embed_simple"] ==
+                    "https://cdn.discordapp.com/attachments/303988901570150401/360466192781017088/report.png"
                 ):
                     settings[server]["thumbnail"][
                         "warning_embed_simple"
                     ] = "https://i.imgur.com/Bl62rGd.png"
                 if (
-                        settings[server]["thumbnail"]["warning_embed_kick"] ==
-                        "https://cdn.discordapp.com/attachments/303988901570150401/360466190956494858/kick.png"
+                    settings[server]["thumbnail"]["warning_embed_kick"] ==
+                    "https://cdn.discordapp.com/attachments/303988901570150401/360466190956494858/kick.png"
                 ):
                     settings[server]["thumbnail"][
                         "warning_embed_kick"
                     ] = "https://i.imgur.com/uhrYzyt.png"
                 if (
-                        settings[server]["thumbnail"]["warning_embed_ban"] ==
-                        "https://media.discordapp.net/attachments/303988901570150401/360466189979222017/ban.png"
+                    settings[server]["thumbnail"]["warning_embed_ban"] ==
+                    "https://media.discordapp.net/attachments/303988901570150401/360466189979222017/ban.png"
                 ):
                     settings[server]["thumbnail"][
                         "warning_embed_ban"
@@ -2267,7 +2080,7 @@ def check_version_history():
         if file.endswith(".json"):
             file_json = dataIO.load_json("data/bettermod/history/{}".format(file))
             if (
-                    "version" not in file_json
+                "version" not in file_json
             ):  # a log file is not up-to-date (usually means all the files aren't up-to-date)
                 file_json["version"] = "1.1"
                 # Add here new body
