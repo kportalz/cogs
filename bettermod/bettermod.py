@@ -67,19 +67,16 @@ class BetterMod:
 
         if error_perm == 1:
             message_perm += "Please give me the following permissions and try again"
-            await
-            self.bot.say(message_perm)
+            await self.bot.say(message_perm)
 
         if error_file == 1:
             message_file += (
                 "The files were successfully re-created. Try again your command (you may need to set your local settings again)"
             )
-            await
-            self.bot.say(message_file)
+            await self.bot.say(message_file)
 
         if ctx.message.server.id not in self.settings:
-            await
-            self.init(ctx.message.server, ctx)
+            await self.init(ctx.message.server, ctx)
 
     async def init(self, server, ctx):
         # called on every command
@@ -121,8 +118,7 @@ class BetterMod:
             try:
                 dataIO.save_json("data/bettermod/settings.json", self.settings)
             except:
-                await
-                self.error(ctx)
+                await self.error(ctx)
                 return
 
     async def add_case(self, level, user, reason, timestamp, server, applied, ctx):
@@ -133,8 +129,7 @@ class BetterMod:
             try:
                 dataIO.save_json("data/bettermod/history/{}.json".format(server.id), data={})
             except:
-                await
-                self.error(ctx)
+                await self.error(ctx)
                 return
 
         history = dataIO.load_json("data/bettermod/history/{}.json".format(server.id))
@@ -181,8 +176,7 @@ class BetterMod:
         try:
             dataIO.save_json("data/bettermod/history/{}.json".format(server.id), data=history)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
             return
 
     async def check_case(self, msg, i, ctx, user):
@@ -194,15 +188,13 @@ class BetterMod:
             try:
                 dataIO.save_json("data/bettermod/history/{}.json".format(server.id), data={})
             except:
-                await
-                self.error(ctx)
+                await self.error(ctx)
                 return
 
         try:
             history = dataIO.load_json("data/bettermod/history/{}.json".format(server.id))
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
             return
 
         if i is not None:
@@ -248,15 +240,11 @@ class BetterMod:
                 return
 
         try:
-            await
-            self.bot.add_reaction(msg, "⬅")
-            await
-            self.bot.add_reaction(msg, "❌")
-            await
-            self.bot.add_reaction(msg, "➡")
+            await self.bot.add_reaction(msg, "⬅")
+            await self.bot.add_reaction(msg, "❌")
+            await self.bot.add_reaction(msg, "➡")
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
             return
 
         while True:
@@ -265,31 +253,26 @@ class BetterMod:
             self.bot.wait_for_reaction(
                 emoji=["❌", "⬅", "➡"], user=ctx.message.author, message=msg, timeout=30
             )
-            await
-            asyncio.sleep(0.2)
+            await asyncio.sleep(0.2)
 
             if not response:
                 try:
-                    await
-                    self.bot.clear_reactions(msg)
+                    await self.bot.clear_reactions(msg)
                 except:
                     pass
                 return
 
             if response.reaction.emoji == "❌":
                 try:
-                    await
-                    self.bot.delete_message(msg)
+                    await self.bot.delete_message(msg)
                     return
                 except:
-                    await
-                    self.error(ctx)
+                    await self.error(ctx)
                     return
 
             elif response.reaction.emoji == "➡":
                 try:
-                    await
-                    self.bot.remove_reaction(msg, "➡", ctx.message.author)
+                    await self.bot.remove_reaction(msg, "➡", ctx.message.author)
                 except:
                     pass
 
@@ -329,13 +312,11 @@ class BetterMod:
                     inline=False,
                 )
 
-                msg = await
-                self.bot.edit_message(msg, embed=e)
+                msg = await self.bot.edit_message(msg, embed=e)
 
             else:
                 try:
-                    await
-                    self.bot.remove_reaction(msg, "⬅", ctx.message.author)
+                    await self.bot.remove_reaction(msg, "⬅", ctx.message.author)
                 except:
                     pass
 
@@ -375,22 +356,19 @@ class BetterMod:
                     inline=False,
                 )
 
-                msg = await
-                self.bot.edit_message(msg, embed=e)
+                msg = await self.bot.edit_message(msg, embed=e)
 
     @commands.group(pass_context=True, no_pm=True)
     @checks.admin()
     async def bmodset(self, ctx):
         """Bettermod's settings"""
         if ctx.invoked_subcommand is None:
-            await
-            self.bot.send_cmd_help(ctx)
+            await self.bot.send_cmd_help(ctx)
             server = ctx.message.server
 
             try:
                 if server.id not in self.settings:
-                    await
-                    self.init(server, ctx)
+                    await self.init(server, ctx)
             except:
                 return
 
@@ -455,8 +433,7 @@ thumbnail's URL pictures:
                 setting["thumbnail"]["warning_embed_ban"],
             )
 
-            await
-            self.bot.say("```{}```".format(message))
+            await self.bot.say("```{}```".format(message))
 
     @bmodset.command(pass_context=True, no_pm=True)
     async def channel(self, ctx, channel: discord.Channel = None):
@@ -471,20 +448,16 @@ thumbnail's URL pictures:
 
         try:
             if server.id not in self.settings:
-                await
-                self.init(server, ctx)
+                await self.init(server, ctx)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
 
         self.settings[server.id]["channels"]["general"] = channel.id
-        await
-        self.bot.say("Log messages and reports will be sent to **" + channel.name + "**.")
+        await self.bot.say("Log messages and reports will be sent to **" + channel.name + "**.")
         try:
             dataIO.save_json("data/bettermod/settings.json", self.settings)
         except:
-            await
-            self.error(ctx)
+            await self.error(ctx)
             return
 
     @bmodset.command(pass_context=True, no_pm=True)
