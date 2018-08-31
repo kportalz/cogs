@@ -606,38 +606,6 @@ thumbnail's URL pictures:
             "New embed color has been registered. If the value is invalid, the color will not change."
         )
 
-    @color.command(pass_context=True, no_pm=True, name="softban", aliases="3")
-    async def softban_warn_color(self, ctx, color: str = "000000"):
-        """Set the warning embed color bar in the log channel for the softban type
-
-            Please provide an hexadecimal color (same color character chain as discord roles). Example: #ffff = cyan
-            Useful website: http://www.color-hex.com
-            """
-
-        server = ctx.message.server
-
-        try:
-            if server.id not in self.settings:
-                await self.init(server, ctx)
-        except:
-            await self.error(ctx)
-
-        try:
-            color = color.replace("#", "").replace("0x", "")[:6]
-            color = int(color, 16)
-        except ValueError:
-            color = "000000"
-
-        self.settings[server.id]["colour"]["warning_embed_softban"] = color
-        try:
-            dataIO.save_json("data/bettermod/settings.json", self.settings)
-        except:
-            await self.error(ctx)
-            return
-        await self.bot.say(
-            "New embed color has been registered. If the value is invalid, the color will not change."
-        )
-
     @color.command(pass_context=True, no_pm=True, name="ban", aliases="4")
     async def ban_warn_color(self, ctx, color: str = "000000"):
         """Set the warning embed color bar in the log channel for the ban type
@@ -763,35 +731,6 @@ thumbnail's URL pictures:
                 await self.error(ctx)
                 return
 
-    @thumbnail.command(pass_context=True, no_pm=True, name="softban", aliases="3")
-    async def softban_thumbnail(self, ctx, url: str):
-        """Set the picture of the softban warning embed in modlog"""
-
-        server = ctx.message.server
-
-        try:
-            if server.id not in self.settings:
-                await self.init(server, ctx)
-        except:
-            await self.error(ctx)
-
-        if not url.endswith((".jpg", ".png", ".gif")) and not url.startswith(
-            ("http://", "https://")
-        ):
-            await self.bot.say("The URL given is not valid")
-            return
-
-        else:
-            try:
-                self.settings[server.id]["thumbnail"]["warning_embed_softban"] = url
-                dataIO.save_json("data/bettermod/settings.json", self.settings)
-                await self.bot.say(
-                    "The new thumbnail for the ban warning embed has been set. If the URL is not valid, no thumbnail will be shown in the embed."
-                )
-            except:
-                await self.error(ctx)
-                return
-
     @thumbnail.command(pass_context=True, no_pm=True, name="ban", aliases="4")
     async def ban_thumbnail(self, ctx, url: str):
         """Set the picture of the ban warning embed in modlog"""
@@ -896,31 +835,6 @@ thumbnail's URL pictures:
 
         self.settings[server.id]["channels"]["kick-warn"] = channel.id
         await self.bot.say("Kick warnings will be send to **" + channel.name + "**.")
-        try:
-            dataIO.save_json("data/bettermod/settings.json", self.settings)
-        except:
-            await self.error(ctx)
-            return
-
-    @channels.command(pass_context=True, no_pm=True, name="softban")
-    async def softban_warning_channel(self, ctx, channel: discord.Channel):
-        """Set a separate modlog for softban warnings"""
-
-        if channel is None:
-            channel = ctx.message.channel
-        else:
-            pass
-
-        server = ctx.message.server
-
-        try:
-            if server.id not in self.settings:
-                await self.init(server, ctx)
-        except:
-            await self.error(ctx)
-
-        self.settings[server.id]["channels"]["softban-warn"] = channel.id
-        await self.bot.say("Ban warnings will be send to **" + channel.name + "**.")
         try:
             dataIO.save_json("data/bettermod/settings.json", self.settings)
         except:
@@ -1190,13 +1104,13 @@ thumbnail's URL pictures:
 
         if user == self.bot.user:
             await self.bot.say(
-                "Why do you want to report me :C I did nothing wrong (I cannot kick or ban myself)"
+                "Why are you trying to report me? :("
             )
             return
 
         elif user.bot:
             await self.bot.say(
-                "Why trying to report a bot ? I cannot send message to bots, they cannot see them. Instead, go for the manual way."
+                "You can't report bots."
             )
             return
 
@@ -1221,8 +1135,8 @@ thumbnail's URL pictures:
             pass
 
         # This is the embed sent to the user
-        target = discord.Embed(description="The moderation team sent you a level 1 warning")
-        target.add_field(name="Moderator", value=author.mention, inline=False)
+        target = discord.Embed(description="Your account has been assigned one strike. Three strikes will result in a server kick, and additional strikes will result in a permanent ban.")
+        target.add_field(name="Moderator", value="The Moderation Team", inline=False)
         target.add_field(name="Reason", value=reason, inline=False)
         target.set_footer(text=ctx.message.timestamp.strftime("%d %b %Y %H:%M"))
         target.set_thumbnail(url=self.settings[server.id]["thumbnail"]["warning_embed_simple"])
